@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand-yellow: #F5C518;
+  --color-brand-yellow-light: #FFD700;
+  --color-brand-yellow-dim: #a38910;
+  --color-brand-dark: #111111;
+  --color-brand-darker: #0a0a0a;
+  --color-brand-card: #1c1c1e;
+  --color-brand-card-hover: #252528;
+  --color-brand-surface: #2c2c2e;
+  --color-brand-border: #3a3a3c;
+  --color-brand-text: #f2f2f7;
+  --color-brand-text-muted: #8e8e93;
+  --color-match-green: #30d158;
+  --color-miss-red: #ff453a;
+
+  --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
+
+  --radius-card: 1.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background-color: var(--color-brand-dark);
+  color: var(--color-brand-text);
+  font-family: var(--font-sans);
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-brand-darker);
+  background-image: 
+    radial-gradient(ellipse at 20% 0%, rgba(245, 197, 24, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(245, 197, 24, 0.04) 0%, transparent 50%);
+  user-select: none;
+  -webkit-user-select: none;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-border);
+  border-radius: 2px;
+}
+
+/* Category badge colors */
+.badge-food { background: rgba(245, 197, 24, 0.15); color: #F5C518; }
+.badge-drinks { background: rgba(48, 209, 88, 0.15); color: #30d158; }
+.badge-interactive { background: rgba(10, 132, 255, 0.15); color: #0a84ff; }
+.badge-vibe { background: rgba(191, 90, 242, 0.15); color: #bf5af2; }
+.badge-affection { background: rgba(255, 69, 58, 0.15); color: #ff6b6b; }
