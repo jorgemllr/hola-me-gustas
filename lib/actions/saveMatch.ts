@@ -34,13 +34,16 @@ async function getClientIp(): Promise<string> {
 
 export async function saveMatch(record: MatchRecord): Promise<void> {
   const ip = await getClientIp();
-  const payload = {
-    ...record,
-    ip_address: ip,
-  };
+  
+  // Create a highly readable string format
+  const actionType = record.matched ? "Hizo MATCH (Sí)" : "Dijo NOPE (No)";
+  let readableOption = actionType;
+  if (record.selected_option) {
+    readableOption = `${actionType} — Elegido: [${record.selected_option}]`;
+  }
 
   if (!isSupabaseConfigured()) {
-    console.log("[saveMatch] Supabase not configured. Client IP:", ip, "Payload:", payload);
+    console.log("[saveMatch] Supabase not configured. IP:", ip, "Readable:", readableOption);
     return;
   }
 
@@ -50,7 +53,7 @@ export async function saveMatch(record: MatchRecord): Promise<void> {
       card_id: record.card_id,
       card_title: record.card_title,
       category: record.category,
-      selected_option: record.selected_option ?? null,
+      selected_option: readableOption, // Store the clear human-readable string here!
       matched: record.matched,
       ip_address: ip,
     });
@@ -67,7 +70,7 @@ export async function saveExtraSuggestion(suggestion: string): Promise<void> {
   const ip = await getClientIp();
 
   if (!isSupabaseConfigured()) {
-    console.log("[saveExtraSuggestion] Supabase not configured. Client IP:", ip, "Suggestion:", suggestion);
+    console.log("[saveExtraSuggestion] Supabase not configured. IP:", ip, "Suggestion:", suggestion);
     return;
   }
 
@@ -77,7 +80,7 @@ export async function saveExtraSuggestion(suggestion: string): Promise<void> {
       card_id: "extra_suggestion",
       card_title: "Sugerencia Extra",
       category: "feedback",
-      selected_option: suggestion,
+      selected_option: `Sugerencia: "${suggestion}"`, // Clear readable string format
       matched: true,
       ip_address: ip,
     });
