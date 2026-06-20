@@ -51,6 +51,7 @@ export async function saveMatch(record: MatchRecord): Promise<void> {
       card_title: record.card_title,
       category: record.category,
       selected_option: record.selected_option ?? null,
+      matched: record.matched,
       ip_address: ip,
     });
 
@@ -77,6 +78,7 @@ export async function saveExtraSuggestion(suggestion: string): Promise<void> {
       card_title: "Sugerencia Extra",
       category: "feedback",
       selected_option: suggestion,
+      matched: true,
       ip_address: ip,
     });
 

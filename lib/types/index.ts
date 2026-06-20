@@ -21,4 +21,5 @@ export interface MatchRecord {
   card_title: string;
   category: string;
   selected_option?: string | null;
+  matched: boolean;
 }

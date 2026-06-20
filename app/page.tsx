@@ -56,6 +56,7 @@ export default function Home() {
           card_title: card.title,
           category: card.category,
           selected_option: null,
+          matched: true,
         });
       }
     },
@@ -71,7 +72,8 @@ export default function Home() {
         card_id: card.id,
         card_title: card.title,
         category: card.category,
-        selected_option: "MISSED",
+        selected_option: null,
+        matched: false,
       });
     },
     [removeTopCard]
@@ -97,6 +99,7 @@ export default function Home() {
         card_title: interactiveCard.title,
         category: interactiveCard.category,
         selected_option: selectedOption,
+        matched: true,
       });
     },
     [interactiveCard, removeTopCard, showOverlay]
@@ -113,7 +116,8 @@ export default function Home() {
       card_id: interactiveCard.id,
       card_title: interactiveCard.title,
       category: interactiveCard.category,
-      selected_option: "MISSED",
+      selected_option: null,
+      matched: false,
     });
   }, [interactiveCard, removeTopCard]);
 
