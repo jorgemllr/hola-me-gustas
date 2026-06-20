@@ -22,4 +22,6 @@ export interface MatchRecord {
   category: string;
   selected_option?: string | null;
   matched: boolean;
+  session_id: string;
+  order_index: number;
 }

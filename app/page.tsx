@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/layout/Header";
 import CardDeck from "@/components/ui/CardDeck";
@@ -15,6 +15,11 @@ import type { CardData, SwipeDecision } from "@/lib/types";
 
 type OverlayMessage = "match" | "miss" | null;
 
+// Unique session generation helper
+function generateSessionId(): string {
+  return "session_" + Math.random().toString(36).substring(2, 11) + "_" + Date.now();
+}
+
 export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [cards, setCards] = useState<CardData[]>([...CARDS]);
@@ -24,6 +29,16 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Maintain a stable sessionId for the page load session
+  const sessionIdRef = useRef<string>("");
+  // Track consecutive swipe action order index
+  const orderIndexRef = useRef<number>(0);
+
+  useEffect(() => {
+    // Generate unique session id once component mounts on the client
+    sessionIdRef.current = generateSessionId();
+  }, []);
 
   const showOverlay = useCallback((type: OverlayMessage) => {
     if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
@@ -51,12 +66,16 @@ export default function Home() {
         setHistory((prev) => [...prev, decision]);
         removeTopCard();
         showOverlay("match");
+        
+        const currentOrder = orderIndexRef.current++;
         saveMatch({
           card_id: card.id,
           card_title: card.title,
           category: card.category,
           selected_option: null,
           matched: true,
+          session_id: sessionIdRef.current,
+          order_index: currentOrder,
         });
       }
     },
@@ -68,18 +87,21 @@ export default function Home() {
       const decision: SwipeDecision = { card, direction: "left" };
       setHistory((prev) => [...prev, decision]);
       removeTopCard();
+      
+      const currentOrder = orderIndexRef.current++;
       saveMatch({
         card_id: card.id,
         card_title: card.title,
         category: card.category,
         selected_option: null,
         matched: false,
+        session_id: sessionIdRef.current,
+        order_index: currentOrder,
       });
     },
     [removeTopCard]
   );
 
-  // Now accepts string[] from multi-select modal
   const handleOptionSelect = useCallback(
     (options: string[]) => {
       if (!interactiveCard) return;
@@ -94,12 +116,16 @@ export default function Home() {
       setInteractiveCard(null);
       removeTopCard();
       showOverlay("match");
+      
+      const currentOrder = orderIndexRef.current++;
       saveMatch({
         card_id: interactiveCard.id,
         card_title: interactiveCard.title,
         category: interactiveCard.category,
         selected_option: selectedOption,
         matched: true,
+        session_id: sessionIdRef.current,
+        order_index: currentOrder,
       });
     },
     [interactiveCard, removeTopCard, showOverlay]
@@ -112,12 +138,16 @@ export default function Home() {
     setIsModalOpen(false);
     setInteractiveCard(null);
     removeTopCard();
+    
+    const currentOrder = orderIndexRef.current++;
     saveMatch({
       card_id: interactiveCard.id,
       card_title: interactiveCard.title,
       category: interactiveCard.category,
       selected_option: null,
       matched: false,
+      session_id: sessionIdRef.current,
+      order_index: currentOrder,
     });
   }, [interactiveCard, removeTopCard]);
 
@@ -127,6 +157,12 @@ export default function Home() {
     setHistory((prev) => prev.slice(0, -1));
     setCards((prev) => [lastDecision.card, ...prev]);
     setIsDone(false);
+    
+    // Decrement order count on undo to keep timeline indices continuous
+    if (orderIndexRef.current > 0) {
+      orderIndexRef.current--;
+    }
+    
     if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
     setOverlay(null);
   }, [history]);
@@ -187,7 +223,11 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <EndScreen />
+                {/* Pass state values down to EndScreen for suggestions submits */}
+                <EndScreen 
+                  sessionId={sessionIdRef.current} 
+                  nextOrderIndex={orderIndexRef.current} 
+                />
               </motion.div>
             ) : (
               <motion.div

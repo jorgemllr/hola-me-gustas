@@ -16,7 +16,7 @@ function isSupabaseConfigured() {
   );
 }
 
-// Client IP detection (headers helper is dynamic, so must run in Next.js Server Component/Action context)
+// Client IP detection
 async function getClientIp(): Promise<string> {
   try {
     const headersList = await headers();
@@ -35,7 +35,6 @@ async function getClientIp(): Promise<string> {
 export async function saveMatch(record: MatchRecord): Promise<void> {
   const ip = await getClientIp();
   
-  // Create a highly readable string format
   const actionType = record.matched ? "Hizo MATCH (Sí)" : "Dijo NOPE (No)";
   let readableOption = actionType;
   if (record.selected_option) {
@@ -43,7 +42,7 @@ export async function saveMatch(record: MatchRecord): Promise<void> {
   }
 
   if (!isSupabaseConfigured()) {
-    console.log("[saveMatch] Supabase not configured. IP:", ip, "Readable:", readableOption);
+    console.log("[saveMatch] Supabase not configured. IP:", ip, "Readable:", readableOption, "Session ID:", record.session_id, "Order:", record.order_index);
     return;
   }
 
@@ -53,9 +52,11 @@ export async function saveMatch(record: MatchRecord): Promise<void> {
       card_id: record.card_id,
       card_title: record.card_title,
       category: record.category,
-      selected_option: readableOption, // Store the clear human-readable string here!
+      selected_option: readableOption,
       matched: record.matched,
       ip_address: ip,
+      session_id: record.session_id,
+      order_index: record.order_index,
     });
 
     if (error) {
@@ -66,11 +67,11 @@ export async function saveMatch(record: MatchRecord): Promise<void> {
   }
 }
 
-export async function saveExtraSuggestion(suggestion: string): Promise<void> {
+export async function saveExtraSuggestion(suggestion: string, sessionId: string, orderIndex: number): Promise<void> {
   const ip = await getClientIp();
 
   if (!isSupabaseConfigured()) {
-    console.log("[saveExtraSuggestion] Supabase not configured. IP:", ip, "Suggestion:", suggestion);
+    console.log("[saveExtraSuggestion] Supabase not configured. IP:", ip, "Suggestion:", suggestion, "Session ID:", sessionId, "Order:", orderIndex);
     return;
   }
 
@@ -80,9 +81,11 @@ export async function saveExtraSuggestion(suggestion: string): Promise<void> {
       card_id: "extra_suggestion",
       card_title: "Sugerencia Extra",
       category: "feedback",
-      selected_option: `Sugerencia: "${suggestion}"`, // Clear readable string format
+      selected_option: `Sugerencia: "${suggestion}"`,
       matched: true,
       ip_address: ip,
+      session_id: sessionId,
+      order_index: orderIndex,
     });
 
     if (error) {

@@ -4,7 +4,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { saveExtraSuggestion } from "@/lib/actions/saveMatch";
 
-export default function EndScreen() {
+interface EndScreenProps {
+  sessionId?: string;
+  nextOrderIndex?: number;
+}
+
+export default function EndScreen({ sessionId = "no-session", nextOrderIndex = 99 }: EndScreenProps) {
   const [suggestion, setSuggestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -15,7 +20,7 @@ export default function EndScreen() {
 
     setIsSubmitting(true);
     try {
-      await saveExtraSuggestion(suggestion.trim());
+      await saveExtraSuggestion(suggestion.trim(), sessionId, nextOrderIndex);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Failed to submit suggestion:", error);
