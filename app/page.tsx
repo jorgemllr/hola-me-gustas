@@ -177,7 +177,7 @@ export default function Home() {
         </AnimatePresence>
 
         {/* Main area */}
-        <div className="flex-1 flex flex-col items-center justify-center relative min-h-0">
+        <div className="flex-1 flex flex-col items-center justify-center relative min-h-0 pb-16">
           <AnimatePresence mode="wait">
             {isDone ? (
               <motion.div
@@ -210,30 +210,30 @@ export default function Home() {
           <SwipeOverlay message={overlay} />
         </div>
 
-        {/* Bottom controls */}
+        {/* Bottom controls - Floating Static Overlay */}
         <AnimatePresence>
           {!isDone && (
             <motion.div
-              className="flex flex-col items-center pb-3 pt-1 gap-2"
+              className="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-center bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pt-6 pb-4"
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 8px)" }}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+              exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex items-center gap-6 px-8">
+              <div className="flex items-center gap-8 px-6">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-7 h-7 rounded-full border border-[#ff453a]/50 flex items-center justify-center text-sm">
+                  <div className="w-7 h-7 rounded-full border border-[#ff453a]/50 flex items-center justify-center text-xs text-white/90">
                     ✕
                   </div>
-                  <span className="text-[#8e8e93] text-xs">Nope</span>
+                  <span className="text-[#8e8e93] text-[10px]">Nope</span>
                 </div>
 
                 <UndoButton onUndo={handleUndo} disabled={history.length === 0} />
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#8e8e93] text-xs">Match</span>
-                  <div className="w-7 h-7 rounded-full border border-[#30d158]/50 flex items-center justify-center text-sm">
+                  <span className="text-[#8e8e93] text-[10px]">Match</span>
+                  <div className="w-7 h-7 rounded-full border border-[#30d158]/50 flex items-center justify-center text-xs">
                     💛
                   </div>
                 </div>
