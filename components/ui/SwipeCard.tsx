@@ -83,7 +83,7 @@ export default function SwipeCard({
           scale: isTop ? 1 : backgroundScale,
           zIndex,
         }}
-        className={`relative w-[min(88vw,360px)] h-[min(70vh,580px)] rounded-[24px] overflow-hidden shadow-2xl ${
+        className={`relative w-[min(88vw,360px)] h-[min(64vh,530px)] rounded-[24px] overflow-hidden shadow-2xl ${
           isTop ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"
         }`}
         whileTap={isTop ? { scale: 0.98 } : {}}

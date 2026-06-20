@@ -214,8 +214,8 @@ export default function Home() {
         <AnimatePresence>
           {!isDone && (
             <motion.div
-              className="flex flex-col items-center pb-6 pt-3 gap-3"
-              style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
+              className="flex flex-col items-center pb-3 pt-1 gap-2"
+              style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 8px)" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}

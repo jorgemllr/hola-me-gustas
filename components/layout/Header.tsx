@@ -2,7 +2,7 @@
 
 export default function Header() {
   return (
-    <header className="flex flex-col items-center justify-center pt-safe pb-2 px-6 z-10 relative">
+    <header className="flex flex-col items-center justify-center pt-safe mt-3 pb-2 px-6 z-10 relative">
       {/* Decorative line */}
       <div className="flex items-center gap-3 mb-1">
         <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#F5C518]/40" />
@@ -23,7 +23,7 @@ export default function Header() {
           filter: "drop-shadow(0 0 20px rgba(245, 197, 24, 0.35))",
         }}
       >
-        hola me gustas
+        hola, me gustas
       </h1>
 
       {/* Subtitle */}
