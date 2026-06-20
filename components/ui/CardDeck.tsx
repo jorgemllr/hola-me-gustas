@@ -56,7 +56,7 @@ export default function CardDeck({ cards, onSwipeLeft, onSwipeRight }: CardDeckP
 
       {/* Empty state when deck is loading or transitioning */}
       {cards.length === 0 && (
-        <div className="w-[min(88vw,360px)] h-[min(70vh,580px)] rounded-[24px] border border-[#3a3a3c] bg-[#1c1c1e]/50 flex items-center justify-center">
+        <div className="w-[min(88vw,340px)] h-[min(48vh,420px)] translate-y-[-24px] rounded-[24px] border border-[#3a3a3c] bg-[#1c1c1e]/50 flex items-center justify-center">
           <div className="text-[#8e8e93] text-sm">Cargando...</div>
         </div>
       )}
